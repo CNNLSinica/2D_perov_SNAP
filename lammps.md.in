@@ -1,0 +1,32 @@
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_data       Lammps_Input.data
+replicate       2 2 1
+
+
+mass            1 207.2
+mass            2 126.905
+mass            3 12.011
+mass            4 1.001
+mass            5 14.01
+
+pair_style snap
+pair_coeff * * 2D_perov.snapcoeff 2D_perov.snapparam Pb I C H N
+
+neighbor        2.0 bin
+neigh_modify    every 1
+
+thermo          1
+thermo_style    custom step temp pe ke press
+timestep        0.0005
+velocity        all create 300 1
+
+
+fix             1 all nvt temp 300.0 300.0 0.05
+
+dump            1 all custom 5 lammps.trajectory id type x y z fx fy fz
+
+run 100000
